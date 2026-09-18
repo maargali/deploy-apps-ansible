@@ -3,6 +3,8 @@
 
 - import_tasks: init.yml      # Directories, configs, certs
 
+- import_tasks: ssl.yml       # Verify SSL
+
 - import_tasks: config.yml    # PostgreSQL configuration
 
 - import_tasks: run.yml       # Start PostgreSQL + Wait for pg_isready
@@ -11,4 +13,4 @@
 
 - import_tasks: users.yml     # Create roles/users
 
-- import_tasks: ssl.yml       # Verify SSL
+
