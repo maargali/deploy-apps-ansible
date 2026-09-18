@@ -1,9 +1,9 @@
 postgres_image: postgres:15
 
 
-postgres_data_dir: /opt/maargali/postgres/data
-postgres_cert_dir: /opt/maargali/postgres/certs
-postgres_config_dir: /opt/maargali/postgres/config
+postgres_data_dir: "{{app_base_dir}}/postgres/data"
+postgres_cert_dir: "{{app_base_dir}}/postgres/certs"
+postgres_config_dir: "{{app_base_dir}}/postgres/config"
 
 postgres_enable_ssl: true
 postgres_reset_db: false   # ⚠️ safety switch
