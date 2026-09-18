@@ -14,10 +14,10 @@
     volumes:
       - "{{ postgres_data_dir }}:/var/lib/postgresql/data"
       - "{{ postgres_cert_dir }}:/var/lib/postgresql/certs"
-      - "{{ postgres_config_dir }}:/etc/postgresql/custom"
+      - "{{ postgres_config_dir }}:/etc/postgresql/{{env}}"
     command: >
       postgres
-      -c config_file=/etc/postgresql/custom/postgresql.conf
+      -c config_file=/etc/postgresql/{{env}}/postgresql.conf
 
     env:
       POSTGRES_DB: "{{ postgres_db }}"
