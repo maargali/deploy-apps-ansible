@@ -17,6 +17,6 @@
       - name: "{{ docker_network }}"
 
     volumes:
-      - /opt/maargali/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - "{{app_base_dir}}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/www/certbot:/var/www/certbot

@@ -1,11 +1,11 @@
 - name: Create nginx config directory
   file:
-    path: /opt/maargali/nginx
+    path: "{{app_base_dir}}/nginx"
     state: directory
 
 - name: Generate nginx.conf
   template:
     src: nginx.conf.j2
-    dest: /opt/maargali/nginx/nginx.conf
+    dest: "{{app_base_dir}}/nginx/nginx.conf"
 
   notify: Restart nginx container
