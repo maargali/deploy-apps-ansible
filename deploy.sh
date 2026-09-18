@@ -1,9 +1,10 @@
+```bash
 #!/bin/bash
 
 set -e
 
 # ============================================================
-# Application Deployment Script
+# FUELMAN APPLICATION DEPLOYMENT SCRIPT
 # ============================================================
 
 clear
@@ -43,6 +44,7 @@ case "$ENV_CHOICE" in
         ;;
 esac
 
+
 # ------------------------------------------------------------
 # 2. Check Inventory
 # ------------------------------------------------------------
@@ -56,27 +58,15 @@ if [ ! -f "$INVENTORY" ]; then
     exit 1
 fi
 
+
 # ------------------------------------------------------------
-# 3. Enter Application Name
+# 3. Select Deployment Type
 # ------------------------------------------------------------
 
 echo ""
 echo "Environment selected: $ENV"
 echo ""
 
-read -p "Enter application name: " APP_NAME
-
-if [ -z "$APP_NAME" ]; then
-    echo ""
-    echo "ERROR: Application name cannot be empty."
-    exit 1
-fi
-
-# ------------------------------------------------------------
-# 4. Select Deployment Type
-# ------------------------------------------------------------
-
-echo ""
 echo "Select Deployment Type:"
 echo ""
 echo "  1) Backend"
@@ -88,28 +78,127 @@ echo ""
 read -p "Enter deployment type [1-4]: " TYPE_CHOICE
 
 case "$TYPE_CHOICE" in
+
     1)
         DEPLOY_TYPE="backend"
         PLAYBOOK="deploy-backend.yml"
+        NEED_APP=true
         ;;
+
     2)
         DEPLOY_TYPE="frontend"
         PLAYBOOK="deploy-frontend.yml"
+        NEED_APP=true
         ;;
+
     3)
         DEPLOY_TYPE="nginx"
         PLAYBOOK="deploy-nginx.yml"
+        NEED_APP=false
         ;;
+
     4)
         DEPLOY_TYPE="docker"
         PLAYBOOK="deploy-docker.yml"
+        NEED_APP=false
         ;;
+
     *)
         echo ""
         echo "ERROR: Invalid deployment type."
         exit 1
         ;;
+
 esac
+
+
+# ------------------------------------------------------------
+# 4. Select Application
+# ------------------------------------------------------------
+
+APP_NAME=""
+
+if [ "$NEED_APP" = true ]; then
+
+    APP_DIR="inventory/$ENV/group_vars/$DEPLOY_TYPE"
+
+    if [ ! -d "$APP_DIR" ]; then
+        echo ""
+        echo "ERROR: Application directory not found:"
+        echo "       $APP_DIR"
+        exit 1
+    fi
+
+
+    # --------------------------------------------------------
+    # Find application YAML files
+    # --------------------------------------------------------
+
+    APPS=()
+
+    while IFS= read -r file; do
+        APP=$(basename "$file" .yml)
+        APPS+=("$APP")
+    done < <(find "$APP_DIR" -maxdepth 1 -type f -name "*.yml" | sort)
+
+
+    # --------------------------------------------------------
+    # Check applications exist
+    # --------------------------------------------------------
+
+    if [ ${#APPS[@]} -eq 0 ]; then
+        echo ""
+        echo "ERROR: No applications found."
+        echo ""
+        echo "Directory:"
+        echo "  $APP_DIR"
+        exit 1
+    fi
+
+
+    # --------------------------------------------------------
+    # Display applications
+    # --------------------------------------------------------
+
+    echo ""
+    echo "=============================================="
+    echo "          AVAILABLE APPLICATIONS"
+    echo "=============================================="
+    echo ""
+    echo "Environment : $ENV"
+    echo "Deployment  : $DEPLOY_TYPE"
+    echo ""
+
+    for i in "${!APPS[@]}"; do
+        echo "  $((i+1))) ${APPS[$i]}"
+    done
+
+    echo ""
+
+    read -p "Select application [1-${#APPS[@]}]: " APP_CHOICE
+
+
+    # --------------------------------------------------------
+    # Validate application selection
+    # --------------------------------------------------------
+
+    if ! [[ "$APP_CHOICE" =~ ^[0-9]+$ ]]; then
+        echo ""
+        echo "ERROR: Invalid application selection."
+        exit 1
+    fi
+
+    if [ "$APP_CHOICE" -lt 1 ] || [ "$APP_CHOICE" -gt "${#APPS[@]}" ]; then
+        echo ""
+        echo "ERROR: Invalid application selection."
+        exit 1
+    fi
+
+
+    APP_NAME="${APPS[$((APP_CHOICE-1))]}"
+
+fi
+
 
 # ------------------------------------------------------------
 # 5. Check Playbook
@@ -124,6 +213,7 @@ if [ ! -f "$PLAYBOOK_PATH" ]; then
     exit 1
 fi
 
+
 # ------------------------------------------------------------
 # 6. Deployment Summary
 # ------------------------------------------------------------
@@ -134,17 +224,44 @@ echo "=============================================="
 echo "              DEPLOYMENT SUMMARY"
 echo "=============================================="
 echo ""
+
 echo " Environment : $ENV"
-echo " Application : $APP_NAME"
 echo " Type        : $DEPLOY_TYPE"
+
+if [ "$NEED_APP" = true ]; then
+    echo " Application : $APP_NAME"
+fi
+
 echo " Inventory   : $INVENTORY"
 echo " Playbook    : $PLAYBOOK_PATH"
+
 echo ""
 echo "=============================================="
 echo ""
 
+
 # ------------------------------------------------------------
-# 7. Production Warning
+# 7. Build Ansible Command
+# ------------------------------------------------------------
+
+if [ "$NEED_APP" = true ]; then
+
+    ANSIBLE_COMMAND="ansible-playbook \
+-i \"$INVENTORY\" \
+\"$PLAYBOOK_PATH\" \
+-e \"app_name=$APP_NAME\""
+
+else
+
+    ANSIBLE_COMMAND="ansible-playbook \
+-i \"$INVENTORY\" \
+\"$PLAYBOOK_PATH\""
+
+fi
+
+
+# ------------------------------------------------------------
+# 8. Production Warning / Confirmation
 # ------------------------------------------------------------
 
 if [ "$ENV" = "prod" ]; then
@@ -155,10 +272,17 @@ if [ "$ENV" = "prod" ]; then
     echo ""
     echo "You are about to deploy to PRODUCTION."
     echo ""
-    echo "Application : $APP_NAME"
-    echo "Type        : $DEPLOY_TYPE"
+
+    echo " Environment : $ENV"
+    echo " Type        : $DEPLOY_TYPE"
+
+    if [ "$NEED_APP" = true ]; then
+        echo " Application : $APP_NAME"
+    fi
+
     echo ""
-    read -p "Type 'DEPLOY' to continue: " PROD_CONFIRM
+    echo "Type 'DEPLOY' to continue:"
+    read PROD_CONFIRM
 
     if [ "$PROD_CONFIRM" != "DEPLOY" ]; then
         echo ""
@@ -178,17 +302,9 @@ else
 
 fi
 
-# ------------------------------------------------------------
-# 8. Build Ansible Command
-# ------------------------------------------------------------
-
-ANSIBLE_COMMAND="ansible-playbook \
--i \"$INVENTORY\" \
-\"$PLAYBOOK_PATH\" \
--e \"app_name=$APP_NAME\""
 
 # ------------------------------------------------------------
-# 9. Display Command
+# 9. Display Ansible Command
 # ------------------------------------------------------------
 
 echo ""
@@ -196,17 +312,31 @@ echo "=============================================="
 echo "             EXECUTING DEPLOYMENT"
 echo "=============================================="
 echo ""
+
 echo "$ANSIBLE_COMMAND"
+
 echo ""
+
 
 # ------------------------------------------------------------
 # 10. Execute Ansible
 # ------------------------------------------------------------
 
-ansible-playbook \
-    -i "$INVENTORY" \
-    "$PLAYBOOK_PATH" \
-    -e "app_name=$APP_NAME"
+if [ "$NEED_APP" = true ]; then
+
+    ansible-playbook \
+        -i "$INVENTORY" \
+        "$PLAYBOOK_PATH" \
+        -e "app_name=$APP_NAME"
+
+else
+
+    ansible-playbook \
+        -i "$INVENTORY" \
+        "$PLAYBOOK_PATH"
+
+fi
+
 
 # ------------------------------------------------------------
 # 11. Deployment Completed
@@ -218,8 +348,14 @@ echo "=============================================="
 echo "        DEPLOYMENT COMPLETED SUCCESSFULLY"
 echo "=============================================="
 echo ""
+
 echo " Environment : $ENV"
-echo " Application : $APP_NAME"
 echo " Type        : $DEPLOY_TYPE"
+
+if [ "$NEED_APP" = true ]; then
+    echo " Application : $APP_NAME"
+fi
+
 echo ""
 echo "=============================================="
+```
