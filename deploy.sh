@@ -71,10 +71,12 @@ echo ""
 echo "  1) Backend"
 echo "  2) Frontend"
 echo "  3) Nginx"
-echo "  4) Docker"
+echo "  4) postgres"
+echo "  5) certbot"
+echo "  6) docker"
 echo ""
 
-read -p "Enter deployment type [1-4]: " TYPE_CHOICE
+read -p "Enter deployment type [1-6]: " TYPE_CHOICE
 
 case "$TYPE_CHOICE" in
 
@@ -97,12 +99,25 @@ case "$TYPE_CHOICE" in
         ;;
 
     4)
+        DEPLOY_TYPE="postgres"
+        PLAYBOOK="deploy-postgres.yml"
+        NEED_APP=false
+        ;;
+
+    5)
+        DEPLOY_TYPE="certbot"
+        PLAYBOOK="deploy-certbot.yml"
+        NEED_APP=false
+        ;;
+
+    6)
         DEPLOY_TYPE="docker"
         PLAYBOOK="deploy-docker.yml"
         NEED_APP=false
         ;;
 
     *)
+    
         echo ""
         echo "ERROR: Invalid deployment type."
         exit 1
