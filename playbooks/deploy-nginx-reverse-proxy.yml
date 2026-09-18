@@ -1,4 +1,4 @@
-- hosts: prod
+- hosts: nginx
   become: true
 
   roles:

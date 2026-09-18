@@ -1,8 +1,8 @@
-- hosts: prod
+- hosts: backend
   become: true
 
-  vars_files:
-    - ../inventory/prod/group_vars/backend/fleet-api.yml
+    -"vars_files:"
+    -" - ../inventory/prod/group_vars/backend/fleet-api.yml"
 
   vars:
     build_name: fleet-prod

@@ -89,7 +89,7 @@
 # -------------------------
 # Create application network
 # -------------------------
-- name: Ensure prod network exists
+- name: Ensure {{docker_network}} network exists
   community.docker.docker_network:
-    name: prod
+    name: {{docker_network}}
     state: present

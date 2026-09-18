@@ -1,9 +1,9 @@
 backend_branch: "main"
 
-backend_network: "prod"
+backend_network: "{{docker_network}}"
 
 backend_container_port: 8080
 
-backend_app_base_dir: "/opt/maargali/backend"
+backend_app_base_dir: "{{app_base_dir}}/backend"
 
 backend_app_dir: "{{ backend_app_base_dir }}/{{ backend_name }}"

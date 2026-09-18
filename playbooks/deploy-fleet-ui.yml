@@ -1,8 +1,5 @@
-- hosts: prod
+- hosts: frontend
   become: true
-
-  vars_files:
-    - ../inventory/prod/group_vars/frontend/fleet-ui.yml
 
   roles:
     - docker

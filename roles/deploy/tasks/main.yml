@@ -1,4 +1,4 @@
 - name: Ensure docker network exists
   community.docker.docker_network:
-    name: prod
+    name: {{docker_network}}
     state: present

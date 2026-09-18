@@ -1,10 +1,10 @@
 frontend_branch: "main"
 
-frontend_network: "prod"
+frontend_network: "{{docker_network}}"
 
 frontend_container_port: 80
 
-frontend_app_base_dir: "/opt/maargali/frontend"
+frontend_app_base_dir: "{{app_base_dir}}/frontend"
 
 frontend_app_dir: "{{ frontend_app_base_dir }}/{{ frontend_name }}"
 
