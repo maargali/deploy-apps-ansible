@@ -91,5 +91,5 @@
 # -------------------------
 - name: Ensure {{docker_network}} network exists
   community.docker.docker_network:
-    name: {{docker_network}}
+    name: "{{docker_network}}"
     state: present
