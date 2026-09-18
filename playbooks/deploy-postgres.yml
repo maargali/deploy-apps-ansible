@@ -1,0 +1,8 @@
+# deploy-postgres.yml
+- name: deploy postgres
+  hosts: db
+  become: yes
+
+  roles:
+    - docker
+    - postgres
