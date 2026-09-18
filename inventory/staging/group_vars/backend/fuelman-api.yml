@@ -20,7 +20,7 @@ app_jar_file: "target/{{ app_name }}-1.0.0.jar"
 backend_schema: fman
 
 backend_java_opts: >-
-  -Dspring.profiles.active=prod
+  -Dspring.profiles.active=staging
   -Dlogging.level.root=INFO
   -Dfleet.endpoint.url=https://your-api-url
   -Dapp.database.url=jdbc:postgresql://{{ postgres_container_name }}:{{ postgres_port }}/{{ postgres_db }}?currentSchema={{ backend_schema }}&options=-ctimezone=Asia/Kolkata
