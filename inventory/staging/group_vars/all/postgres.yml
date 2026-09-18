@@ -1,0 +1,8 @@
+postgres_db: fm_staging
+postgres_user: "staging_db"
+postgres_password: "as*734fkknc%TsR*I"
+postgres_container_name: staging_db
+postgres_host: staging_db
+postgres_network: staging
+postgres_port: 5432
+

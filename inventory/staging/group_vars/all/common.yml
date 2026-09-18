@@ -1,0 +1,14 @@
+# docker network name for the staging environment
+docker_network: staging
+
+# default timezone for the server
+timezone: Asia/Kolkata
+
+# same is used for docker network name
+env: staging
+
+# base directory for all apps
+app_base_dir: /opt/maargali/staging/apps
+
+# base directory for ansible config files
+config_dir: /opt/maargali/staging_ansible/config

@@ -1,0 +1,29 @@
+# backend_branch: main
+# backend_network: prod
+# backend_container_port: 7080
+# are common to all backend applications and no need to give specific with applications level
+
+
+backend_name: "fleet-api"
+
+backend_repo: "git@github.com:maargali/fleet_owner.git"
+
+
+backend_container_name: "fleet-app"
+backend_image_name:  "fleet-app"
+
+backend_host_port: 7080
+
+backend_schema: fleets
+
+app_name: fleetowner 
+app_jar_file: "target/{{ app_name }}-1.0.0.jar"
+
+backend_java_opts: >-
+  -Dspring.profiles.active=prod
+  -Dlogging.level.root=INFO
+  -Dfuelman.endpoint.url=https://your-api-url
+  -Dapp.database.url=jdbc:postgresql://{{ postgres_container_name }}:{{ postgres_port }}/{{ postgres_db }}?currentSchema={{ backend_schema }}&options=-ctimezone=Asia/Kolkata
+  -Dapp.database.user={{ postgres_user }}
+  -Dapp.database.pass={{ postgres_password }}
+  -Duser.timezone=Asia/Kolkata

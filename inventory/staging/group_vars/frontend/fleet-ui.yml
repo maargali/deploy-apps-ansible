@@ -1,0 +1,14 @@
+frontend_name: "fuelman-ui"
+
+frontend_repo: "git@github.com:maargali/fleet_owner_ui.git"
+
+
+frontend_container_name: "fleet-ui-prod"
+frontend_image_name: "fleet-ui"
+
+frontend_host_port: 7081
+
+frontend_build_args:
+  APP_ENV: "prod"
+  REACT_APP_API_URL: "https://stagingfleet.fuelman.in/api/v1"
+  FUELMAN_APP_API_URL: "https://www.stagingfleet.fuelman.in/api/v1"

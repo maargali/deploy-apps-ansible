@@ -1,0 +1,17 @@
+- hosts: backend
+  become: true
+
+  roles:
+    - docker
+    - backend
+
+  tasks:
+    - name: Deployment Summary
+      debug:
+         msg: 
+          - "======================================"
+          - "Deployment Completed"
+          - "Application : {{ app_name }}"
+          - "Environment : {{ env }}"
+          - "Server      : {{ ansible_host }}"
+          - "======================================"
