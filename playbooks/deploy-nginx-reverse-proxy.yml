@@ -1,6 +1,0 @@
-- hosts: nginx
-  become: true
-
-  roles:
-    - docker
-    - nginx

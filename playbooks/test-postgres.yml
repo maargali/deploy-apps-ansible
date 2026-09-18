@@ -1,8 +1,0 @@
-# test-postgres.yml
-- name: Test Postgres Role
-  hosts: db
-  become: yes
-
-  roles:
-    - docker
-    - postgres
