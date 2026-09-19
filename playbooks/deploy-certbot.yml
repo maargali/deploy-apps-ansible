@@ -1,4 +1,4 @@
-- hosts: prod
+- hosts: certbot
   become: true
 
   roles:
