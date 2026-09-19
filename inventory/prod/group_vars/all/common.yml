@@ -1,8 +1,13 @@
+# docker network name for the prod environment
 docker_network: prod
 
+# default timezone for the server
 timezone: Asia/Kolkata
 
+# same is used for docker network name
 env: prod
 
+# base directory for all apps
 app_base_dir: /opt/maargali/prod/apps
+
 config_dir: /opt/maargali/prod_ansible/config
