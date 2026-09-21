@@ -12,3 +12,8 @@ app_base_dir: /opt/maargali/staging/apps
 
 # base directory for ansible config files
 config_dir: /opt/maargali/staging_ansible/config
+
+# nginx global port configuration
+nginx_http_port : '127.0.0.1:82'
+
+nginx_https_port : '127.0.0.1:8444'

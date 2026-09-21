@@ -11,3 +11,8 @@ env: prod
 app_base_dir: /opt/maargali/prod/apps
 
 config_dir: /opt/maargali/prod_ansible/config
+
+# nginx global port configuration
+nginx_http_port : '127.0.0.1:81'
+
+nginx_https_port : '127.0.0.1:8443'
