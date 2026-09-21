@@ -14,6 +14,6 @@ app_base_dir: /opt/maargali/staging/apps
 config_dir: /opt/maargali/staging_ansible/config
 
 # nginx global port configuration
-nginx_http_port : '127.0.0.1:82'
+nginx_http_port : '{{ docker_host_ip }}:82'
 
-nginx_https_port : '127.0.0.1:8444'
+nginx_https_port : '{{ docker_host_ip }}:8444'

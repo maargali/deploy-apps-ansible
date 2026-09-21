@@ -93,3 +93,20 @@
   community.docker.docker_network:
     name: "{{docker_network}}"
     state: present
+
+#-------------------------
+# Get Docker bridge gateway
+#-------------------------
+
+- name: Get Docker bridge gateway
+  ansible.builtin.command:
+    cmd: docker network inspect bridge -f '{{ "{{range .IPAM.Config}}{{.Gateway}}{{end}}" }}'
+  register: docker_bridge_gateway
+  changed_when: false
+
+#-------------------------
+# Set Docker host gateway
+#-------------------------
+- name: Set Docker host gateway
+  ansible.builtin.set_fact:
+    docker_host_ip: "{{ docker_bridge_gateway.stdout }}"
