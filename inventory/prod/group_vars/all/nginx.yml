@@ -29,16 +29,16 @@ nginx_vhosts:
       - path: /
         proxy_pass: http://fleet-ui-prod:80
 
-          #  - name: anchor
+  - name: anchor
 
-          # server_names:
-          # - anchor.fuelman.in
+    server_names:
+      - anchor.fuelman.in
 
-          #primary_domain: anchor.fuelman.in
+    primary_domain: anchor.fuelman.in
 
-          #nginx_locations:
-          #- path: /
-          # proxy_pass: http://anchor-ui-prod:80
+    nginx_locations:
+      - path: /
+        proxy_pass: http://anchor-ui-prod:80
 
-          # - path: /api
-          #  proxy_pass: http://anchor-app-prod:9080
+      - path: /api
+        proxy_pass: http://anchor-app-prod:9080
