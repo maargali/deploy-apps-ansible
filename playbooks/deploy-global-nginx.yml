@@ -1,0 +1,6 @@
+- hosts: global-nginx
+  become: true
+
+  roles:
+    - docker
+    - global-nginx
