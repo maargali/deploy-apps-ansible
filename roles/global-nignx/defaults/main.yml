@@ -1,0 +1,5 @@
+global_nginx_dir: /opt/maargali/global-nginx
+
+global_nginx_image: nginx:1.29-alpine
+
+global_nginx_container_name: global-nginx
