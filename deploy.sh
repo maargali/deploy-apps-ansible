@@ -74,7 +74,6 @@ echo "  3) Nginx"
 echo "  4) postgres"
 echo "  5) certbot"
 echo "  6) docker"
-echo "  7) global-nginx"
 echo ""
 
 read -p "Enter deployment type [1-7]: " TYPE_CHOICE
@@ -116,13 +115,7 @@ case "$TYPE_CHOICE" in
         PLAYBOOK="deploy-docker.yml"
         NEED_APP=false
         ;;
-
-    7)
-        DEPLOY_TYPE="global-nginx"
-        PLAYBOOK="deploy-global-nginx.yml"
-        NEED_APP=false
-        ;;
-
+        
 esac
 
 
