@@ -13,6 +13,6 @@ app_base_dir: /opt/maargali/prod/apps
 config_dir: /opt/maargali/prod_ansible/config
 
 # nginx global port configuration
-nginx_http_port : '{{ docker_host_ip }}:81'
+nginx_http_port : '81'
 
-nginx_https_port : '{{ docker_host_ip }}:8443'
+nginx_https_port : '8443'
