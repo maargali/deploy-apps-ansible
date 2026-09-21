@@ -1,7 +1,7 @@
 - name: Run nginx reverse proxy container
   community.docker.docker_container:
 
-    name: nginx-proxy
+    name: nginx-{{ env }}-proxy
 
     image: nginx:alpine
 
