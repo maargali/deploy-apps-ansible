@@ -1,5 +1,0 @@
-- name: Restart global nginx
-  community.docker.docker_compose_v2:
-    project_src: "{{ global_nginx_dir }}"
-    state: present
-    recreate: always
