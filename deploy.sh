@@ -161,7 +161,7 @@ if [ "$NEED_APP" = true ]; then
         APPS_FILE="inventory/$ENV/group_vars/backend/apps.yml"
         APPS_SECTION="backend_apps"
     else
-         APPS_FILE="inventory/$ENV/group_vars/frontend/apps.yml"
+        APPS_FILE="inventory/$ENV/group_vars/frontend/apps.yml"
         APPS_SECTION="frontend_apps"
     fi
 
