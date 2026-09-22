@@ -4,6 +4,29 @@ set -e
 
 # ============================================================
 # FUELMAN APPLICATION DEPLOYMENT SCRIPT
+#
+# Usage:
+#   ./deploy.sh
+#   ./deploy.sh debug
+#
+# Normal mode:
+#   Ansible runs normally
+#
+# Debug mode:
+#   Bash command tracing is enabled
+#   Ansible runs with -vvvv
+# ============================================================
+
+DEBUG_MODE=false
+
+if [ "${1:-}" = "debug" ]; then
+    DEBUG_MODE=true
+    set -x
+fi
+
+
+# ============================================================
+# 1. Select Environment
 # ============================================================
 
 clear
@@ -13,9 +36,11 @@ echo "        FUELMAN APPLICATION DEPLOYMENT"
 echo "=============================================="
 echo ""
 
-# ------------------------------------------------------------
-# 1. Select Environment
-# ------------------------------------------------------------
+if [ "$DEBUG_MODE" = true ]; then
+    echo "              DEBUG MODE ENABLED"
+    echo "=============================================="
+    echo ""
+fi
 
 echo "Select Environment:"
 echo ""
@@ -44,9 +69,9 @@ case "$ENV_CHOICE" in
 esac
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 2. Check Inventory
-# ------------------------------------------------------------
+# ============================================================
 
 INVENTORY="inventory/$ENV/hosts.ini"
 
@@ -58,9 +83,9 @@ if [ ! -f "$INVENTORY" ]; then
 fi
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 3. Select Deployment Type
-# ------------------------------------------------------------
+# ============================================================
 
 echo ""
 echo "Environment selected: $ENV"
@@ -71,12 +96,12 @@ echo ""
 echo "  1) Backend"
 echo "  2) Frontend"
 echo "  3) Nginx"
-echo "  4) postgres"
-echo "  5) certbot"
-echo "  6) docker"
+echo "  4) PostgreSQL"
+echo "  5) Certbot"
+echo "  6) Docker"
 echo ""
 
-read -p "Enter deployment type [1-7]: " TYPE_CHOICE
+read -p "Enter deployment type [1-6]: " TYPE_CHOICE
 
 case "$TYPE_CHOICE" in
 
@@ -115,13 +140,18 @@ case "$TYPE_CHOICE" in
         PLAYBOOK="deploy-docker.yml"
         NEED_APP=false
         ;;
-        
+
+    *)
+        echo ""
+        echo "ERROR: Invalid deployment type selection."
+        exit 1
+        ;;
 esac
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 4. Select Application
-# ------------------------------------------------------------
+# ============================================================
 
 APP_NAME=""
 
@@ -146,7 +176,13 @@ if [ "$NEED_APP" = true ]; then
     while IFS= read -r file; do
         APP=$(basename "$file" .yml)
         APPS+=("$APP")
-    done < <(find "$APP_DIR" -maxdepth 1 -type f -name "*.yml" | sort)
+    done < <(
+        find "$APP_DIR" \
+            -maxdepth 1 \
+            -type f \
+            -name "*.yml" \
+            | sort
+    )
 
 
     # --------------------------------------------------------
@@ -195,7 +231,8 @@ if [ "$NEED_APP" = true ]; then
         exit 1
     fi
 
-    if [ "$APP_CHOICE" -lt 1 ] || [ "$APP_CHOICE" -gt "${#APPS[@]}" ]; then
+    if [ "$APP_CHOICE" -lt 1 ] || \
+       [ "$APP_CHOICE" -gt "${#APPS[@]}" ]; then
         echo ""
         echo "ERROR: Invalid application selection."
         exit 1
@@ -207,9 +244,9 @@ if [ "$NEED_APP" = true ]; then
 fi
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 5. Check Playbook
-# ------------------------------------------------------------
+# ============================================================
 
 PLAYBOOK_PATH="playbooks/$PLAYBOOK"
 
@@ -221,9 +258,9 @@ if [ ! -f "$PLAYBOOK_PATH" ]; then
 fi
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 6. Deployment Summary
-# ------------------------------------------------------------
+# ============================================================
 
 echo ""
 echo ""
@@ -242,34 +279,41 @@ fi
 echo " Inventory   : $INVENTORY"
 echo " Playbook    : $PLAYBOOK_PATH"
 
+if [ "$DEBUG_MODE" = true ]; then
+    echo " Debug       : ENABLED"
+    echo " Ansible     : -vvvv"
+fi
+
 echo ""
 echo "=============================================="
 echo ""
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 7. Build Ansible Command
-# ------------------------------------------------------------
+# ============================================================
+
+ANSIBLE_ARGS=(
+    -i "$INVENTORY"
+    "$PLAYBOOK_PATH"
+)
 
 if [ "$NEED_APP" = true ]; then
+    ANSIBLE_ARGS+=(
+        -e "app_name=$APP_NAME"
+    )
+fi
 
-    ANSIBLE_COMMAND="ansible-playbook \
--i \"$INVENTORY\" \
-\"$PLAYBOOK_PATH\" \
--e \"app_name=$APP_NAME\""
-
-else
-
-    ANSIBLE_COMMAND="ansible-playbook \
--i \"$INVENTORY\" \
-\"$PLAYBOOK_PATH\""
-
+if [ "$DEBUG_MODE" = true ]; then
+    ANSIBLE_ARGS+=(
+        -vvvv
+    )
 fi
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 8. Production Warning / Confirmation
-# ------------------------------------------------------------
+# ============================================================
 
 if [ "$ENV" = "prod" ]; then
 
@@ -288,6 +332,12 @@ if [ "$ENV" = "prod" ]; then
     fi
 
     echo ""
+
+    if [ "$DEBUG_MODE" = true ]; then
+        echo " DEBUG MODE  : ENABLED"
+        echo ""
+    fi
+
     echo "Type 'DEPLOY' to continue:"
     read PROD_CONFIRM
 
@@ -310,9 +360,9 @@ else
 fi
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 9. Display Ansible Command
-# ------------------------------------------------------------
+# ============================================================
 
 echo ""
 echo "=============================================="
@@ -320,34 +370,30 @@ echo "             EXECUTING DEPLOYMENT"
 echo "=============================================="
 echo ""
 
-echo "$ANSIBLE_COMMAND"
+if [ "$DEBUG_MODE" = true ]; then
+    echo "DEBUG MODE: ENABLED"
+    echo "Ansible verbosity: -vvvv"
+    echo ""
+fi
+
+echo "Command:"
+printf 'ansible-playbook'
+printf ' %q' "${ANSIBLE_ARGS[@]}"
+echo ""
 
 echo ""
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 10. Execute Ansible
-# ------------------------------------------------------------
+# ============================================================
 
-if [ "$NEED_APP" = true ]; then
-
-    ansible-playbook \
-        -i "$INVENTORY" \
-        "$PLAYBOOK_PATH" \
-        -e "app_name=$APP_NAME"
-
-else
-
-    ansible-playbook \
-        -i "$INVENTORY" \
-        "$PLAYBOOK_PATH"
-
-fi
+ansible-playbook "${ANSIBLE_ARGS[@]}"
 
 
-# ------------------------------------------------------------
+# ============================================================
 # 11. Deployment Completed
-# ------------------------------------------------------------
+# ============================================================
 
 echo ""
 echo ""
@@ -361,6 +407,10 @@ echo " Type        : $DEPLOY_TYPE"
 
 if [ "$NEED_APP" = true ]; then
     echo " Application : $APP_NAME"
+fi
+
+if [ "$DEBUG_MODE" = true ]; then
+    echo " Debug       : ENABLED"
 fi
 
 echo ""
