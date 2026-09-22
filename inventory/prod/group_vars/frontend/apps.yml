@@ -1,4 +1,4 @@
-backend_apps:
+frontend_apps:
   # fuelman api application configuration
   #  add app specific variables here and also in roles/backend/tasks/main.yml
   fuelman-ui:
