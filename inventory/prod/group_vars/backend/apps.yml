@@ -1,5 +1,6 @@
 backend_apps:
   # fuelman api application configuration
+  #  add app specific variables here and also in roles/backend/tasks/main.yml
   fuelman-api:
     backend_name: "fuelman-api"
 
@@ -9,9 +10,8 @@ backend_apps:
     backend_image_name: "fuelman-app"
 
     backend_host_port: 8080
-
     app_name: fuelman
-    app_jar_file: "target/{{ app_name }}-1.0.0.jar"
+    app_jar_file: "target/fuelman-1.0.0.jar"
 
     backend_schema: fman
 
@@ -25,6 +25,7 @@ backend_apps:
       -Duser.timezone=Asia/Kolkata
 
   # anchor api application configuration
+  # add app specific variables here and also in roles/backend/tasks/main.yml
   anchor-api:
     backend_name: "anchor-api"
 
@@ -34,9 +35,9 @@ backend_apps:
     backend_image_name: "anchor-app"
 
     backend_host_port: 9080
-
+    
     app_name: anchor
-    app_jar_file: "target/{{ app_name }}-1.0.0.jar"
+    app_jar_file: "target/anchor-1.0.0.jar"
 
     backend_schema: fman
 
@@ -50,6 +51,7 @@ backend_apps:
       -Duser.timezone=Asia/Kolkata
 
   # fleet api application configuration
+  # add app specific variables here and also in roles/backend/tasks/main.yml
   fleet-api:
     backend_name: "fleet-api"
 
@@ -63,7 +65,7 @@ backend_apps:
     backend_schema: fleets
 
     app_name: fleetowner
-    app_jar_file: "target/{{ app_name }}-1.0.0.jar"
+    app_jar_file: "target/fleetowner-1.0.0.jar"
 
     backend_java_opts: >-
       -Dspring.profiles.active=prod

@@ -1,4 +1,20 @@
 ---
+- name: Select backend application
+  ansible.builtin.set_fact:
+    app_config: "{{ backend_apps[deploy_app] }}"
+
+- name: Load application variables
+  ansible.builtin.set_fact:
+    backend_name: "{{ app_config.backend_name }}"
+    backend_repo: "{{ app_config.backend_repo }}"
+    backend_container_name: "{{ app_config.backend_container_name }}"
+    backend_image_name: "{{ app_config.backend_image_name }}"
+    backend_host_port: "{{ app_config.backend_host_port }}"
+    app_name: "{{ app_config.app_name }}"
+    app_jar_file: "{{ app_config.app_jar_file }}"
+    backend_schema: "{{ app_config.backend_schema }}"
+    backend_java_opts: "{{ app_config.backend_java_opts }}"
+    
 - import_tasks: git.yml
   # build.yml is not required, since maven run cmd runs inside dockerfile as multi stage build
   #- import_tasks: build.yml
