@@ -43,7 +43,7 @@
       - name: "{{ backend_network }}"
 
     ports:
-      - "{{ backend_host_port }}:8080"
+      - "{{ backend_host_port }}:{{backend_container_port}}"
 
     env:
       TZ: Asia/Kolkata
