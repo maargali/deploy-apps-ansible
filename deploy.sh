@@ -157,7 +157,7 @@ APP_NAME=""
 
 if [ "$NEED_APP" = true ]; then
 
-    APPS_FILE="inventory/$ENV/group_vars/backend/apps.yml"
+   
 
     if [[ ! -f "$APPS_FILE" ]]; then
         echo "ERROR: Application configuration not found:"
@@ -165,15 +165,30 @@ if [ "$NEED_APP" = true ]; then
         exit 1
     fi
 
+    if [ "$DEPLOY_TYPE" = "backend" ]; then
+        APPS_FILE="inventory/$ENV/group_vars/backend/apps.yml"
+        APPS_SECTION="backend_apps"
+    else
+         APPS_FILE="inventory/$ENV/group_vars/frontend/apps.yml"
+        APPS_SECTION="frontend_apps"
+    fi
+
     mapfile -t APPS < <(
-    awk '
-        /^backend_apps:/ { in_apps=1; next }
-        in_apps && /^[^[:space:]]/ { exit }
-        in_apps && /^  [A-Za-z0-9_-]+:/ {
-            gsub(":", "", $1)
-            print $1
-        }
-    ' "$APPS_FILE"
+        awk -v section="$APPS_SECTION" '
+            $0 ~ "^" section ":" {
+                in_apps=1
+                next
+            }
+
+            in_apps && /^[^[:space:]]/ {
+                exit
+            }
+
+            in_apps && /^  [A-Za-z0-9_-]+:/ {
+                gsub(":", "", $1)
+                print $1
+            }
+        ' "$APPS_FILE"
     )
 
     if [[ ${#APPS[@]} -eq 0 ]]; then
