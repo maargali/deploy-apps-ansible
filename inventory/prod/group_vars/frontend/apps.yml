@@ -1,0 +1,49 @@
+backend_apps:
+  # fuelman api application configuration
+  #  add app specific variables here and also in roles/backend/tasks/main.yml
+  fuelman-api:
+    frontend_name: "fuelman-ui"
+
+    frontend_repo: "git@github.com:maargali/fuelman-ui.git"
+
+
+    frontend_container_name: "prod-fuelman-ui"
+    frontend_image_name: "prod-fuelman-ui"
+
+    frontend_host_port: 8081
+
+    frontend_build_args:
+      APP_ENV: "prod"
+      REACT_APP_API_URL: "https://www.fuelman.in/api/v1"
+      REACT_APP_FLEET_REDIRECT_URL: "https://fleet.fuelman.in"
+  
+  fleet-ui:
+    frontend_name: "fuelman-ui"
+
+    frontend_repo: "git@github.com:maargali/fleet_owner_ui.git"
+
+
+    frontend_container_name: "prod-fleet-ui"
+    frontend_image_name: "prod-fleet-ui"
+
+    frontend_host_port: 7081
+
+    frontend_build_args:
+      APP_ENV: "prod"
+      REACT_APP_API_URL: "https://fleet.fuelman.in/api/v1"
+      FUELMAN_APP_API_URL: "https://www.fuelman.in/api/v1"
+
+
+  anchor-ui:
+    frontend_name: "anchor-ui"
+
+    frontend_repo: "git@github.com:maargali/anchor_ui.git"
+    frontend_container_name: "prod-anchor-ui"
+    frontend_image_name: "prod-anchor-ui"
+
+    frontend_host_port: 9081
+    frontend_build_args:
+      APP_ENV: "prod"
+      REACT_APP_API_URL: "https://anchor.fuelman.in/api/v1"
+      FUELMAN_APP_API_URL: "https://www.fuelman.in/anchorApi"
+
