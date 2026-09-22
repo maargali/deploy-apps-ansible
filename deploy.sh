@@ -157,20 +157,18 @@ APP_NAME=""
 
 if [ "$NEED_APP" = true ]; then
 
-   
-
-    if [[ ! -f "$APPS_FILE" ]]; then
-        echo "ERROR: Application configuration not found:"
-        echo "       $APPS_FILE"
-        exit 1
-    fi
-
     if [ "$DEPLOY_TYPE" = "backend" ]; then
         APPS_FILE="inventory/$ENV/group_vars/backend/apps.yml"
         APPS_SECTION="backend_apps"
     else
          APPS_FILE="inventory/$ENV/group_vars/frontend/apps.yml"
         APPS_SECTION="frontend_apps"
+    fi
+
+    if [[ ! -f "$APPS_FILE" ]]; then
+        echo "ERROR: Application configuration not found:"
+        echo "       $APPS_FILE"
+        exit 1
     fi
 
     mapfile -t APPS < <(
