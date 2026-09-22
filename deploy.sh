@@ -157,47 +157,29 @@ APP_NAME=""
 
 if [ "$NEED_APP" = true ]; then
 
-    APP_DIR="inventory/$ENV/group_vars/$DEPLOY_TYPE"
+    APPS_FILE="inventory/$ENV/group_vars/backend/apps.yml"
 
-    if [ ! -d "$APP_DIR" ]; then
-        echo ""
-        echo "ERROR: Application directory not found:"
-        echo "       $APP_DIR"
+    if [[ ! -f "$APPS_FILE" ]]; then
+        echo "ERROR: Application configuration not found:"
+        echo "       $APPS_FILE"
         exit 1
     fi
 
-
-    # --------------------------------------------------------
-    # Find application YAML files
-    # --------------------------------------------------------
-
-    APPS=()
-
-    while IFS= read -r file; do
-        APP=$(basename "$file" .yml)
-        APPS+=("$APP")
-    done < <(
-        find "$APP_DIR" \
-            -maxdepth 1 \
-            -type f \
-            -name "*.yml" \
-            | sort
+    mapfile -t APPS < <(
+    awk '
+        /^backend_apps:/ { in_apps=1; next }
+        in_apps && /^[^[:space:]]/ { exit }
+        in_apps && /^  [A-Za-z0-9_-]+:/ {
+            gsub(":", "", $1)
+            print $1
+        }
+    ' "$APPS_FILE"
     )
 
-
-    # --------------------------------------------------------
-    # Check applications exist
-    # --------------------------------------------------------
-
-    if [ ${#APPS[@]} -eq 0 ]; then
-        echo ""
-        echo "ERROR: No applications found."
-        echo ""
-        echo "Directory:"
-        echo "  $APP_DIR"
+    if [[ ${#APPS[@]} -eq 0 ]]; then
+        echo "ERROR: No backend applications found in $APPS_FILE"
         exit 1
     fi
-
 
     # --------------------------------------------------------
     # Display applications
@@ -213,12 +195,22 @@ if [ "$NEED_APP" = true ]; then
     echo ""
 
     for i in "${!APPS[@]}"; do
-        echo "  $((i+1))) ${APPS[$i]}"
+        echo "$((i+1))) ${APPS[$i]}"
     done
 
-    echo ""
+    echo
+    read -rp "Select application: " APP_CHOICE
 
-    read -p "Select application [1-${#APPS[@]}]: " APP_CHOICE
+    if ! [[ "$APP_CHOICE" =~ ^[0-9]+$ ]] ||
+    (( APP_CHOICE < 1 || APP_CHOICE > ${#APPS[@]} )); then
+        echo "Invalid application selection."
+        exit 1
+    fi
+
+    APP_NAME="${APPS[$((APP_CHOICE-1))]}"
+
+    echo
+    echo "Selected application: $APP_NAME"
 
 
     # --------------------------------------------------------
