@@ -1,0 +1,23 @@
+backend_name: "anchor-api"
+
+backend_repo: "git@github.com:maargali/anchor.git"
+
+
+backend_container_name: anchor-app-prod
+backend_image_name:  "anchor-app"
+
+backend_host_port: 9080
+
+app_name: anchor
+app_jar_file: "target/{{ app_name }}-1.0.0.jar"
+
+backend_schema: fman
+
+backend_java_opts: >-
+  -Dspring.profiles.active=prod
+  -Dlogging.level.root=INFO
+  -Dfuelman.endpoint.url=http://fuelmanAppProd:8080/anchorApi
+  -Dapp.database.url=jdbc:postgresql://{{ postgres_container_name }}:{{ postgres_port }}/{{ postgres_db }}?currentSchema={{ backend_schema }}&options=-ctimezone=Asia/Kolkata
+  -Dapp.database.user={{ postgres_user }}
+  -Dapp.database.pass={{ postgres_password }}
+  -Duser.timezone=Asia/Kolkata
