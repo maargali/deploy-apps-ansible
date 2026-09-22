@@ -18,7 +18,7 @@ frontend_apps:
       REACT_APP_FLEET_REDIRECT_URL: "https://fleet.fuelman.in"
   
   fleet-ui:
-    frontend_name: "fuelman-ui"
+    frontend_name: "fleet-ui"
 
     frontend_repo: "git@github.com:maargali/fleet_owner_ui.git"
 
@@ -37,7 +37,7 @@ frontend_apps:
   anchor-ui:
     frontend_name: "anchor-ui"
 
-    frontend_repo: "git@github.com:maargali/anchor_ui.git"
+    frontend_repo: "git@github.com:maargali/anchor-ui.git"
     frontend_container_name: "prod-anchor-ui"
     frontend_image_name: "prod-anchor-ui"
 
