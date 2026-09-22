@@ -7,7 +7,7 @@ backend_apps:
     backend_repo: "git@github.com:maargali/fuelman.git"
 
     backend_container_name: fuelmanAppProd
-    backend_image_name: "fuelman-app"
+    backend_image_name: "prod-fuelman-app"
 
     backend_host_port: 8080
     app_name: fuelman
@@ -32,7 +32,7 @@ backend_apps:
     backend_repo: "git@github.com:maargali/anchor.git"
 
     backend_container_name: anchor-app-prod
-    backend_image_name: "anchor-app"
+    backend_image_name: "prod-anchor-app"
 
     backend_host_port: 9080
     
@@ -58,7 +58,7 @@ backend_apps:
     backend_repo: "git@github.com:maargali/fleet_owner.git"
 
     backend_container_name: "fleet-app"
-    backend_image_name: "fleet-app"
+    backend_image_name: "prod-fleet-app"
 
     backend_host_port: 7080
 
