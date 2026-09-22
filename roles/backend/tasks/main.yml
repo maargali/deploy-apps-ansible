@@ -1,7 +1,7 @@
 ---
 - name: Select backend application
   ansible.builtin.set_fact:
-    app_config: "{{ backend_apps[deploy_app] }}"
+    app_config: "{{ backend_apps[app_name] }}"
 
 - name: Load application variables
   ansible.builtin.set_fact:
