@@ -13,18 +13,21 @@
         name: global-nginx
         state: stopped
 
-    - name: Generate or update SSL certificates
+    - name: Generate or update certificates
       ansible.builtin.command: >
         certbot certonly
         --standalone
         --non-interactive
         --agree-tos
         --expand
-        --cert-name {{ certbot_cert_name }}
+        --cert-name {{ item.cert_name }}
         --email {{ certbot_email }}
-        {% for domain in certbot_domains %}
+        {% for domain in item.domains %}
         -d {{ domain }}
         {% endfor %}
+      loop: "{{ certbot_certificates }}"
+      loop_control:
+        label: "{{ item.cert_name }}"
 
   always:
 

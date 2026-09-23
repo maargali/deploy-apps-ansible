@@ -1,9 +1,18 @@
-certbot_cert_name: fuelman.in
-certbot_domains:
-  - fuelman.in
-  - www.fuelman.in
-    # enable below domains after adding dns mapping in hostinger or where ever is required
-  - anchor.fuelman.in
-  - fleet.fuelman.in
+certbot_certificates:
+  - cert_name: fuelman.in
+    domains:
+      - fuelman.in
+      - www.fuelman.in
+
+  - cert_name: anchor.fuelman.in
+    domains:
+      - anchor.fuelman.in
+
+  - cert_name: fleet.fuelman.in
+    domains:
+      - fleet.fuelman.in
 
 certbot_email: maargali.company@gmail.com
+
+
+
