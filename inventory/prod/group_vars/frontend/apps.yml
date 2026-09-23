@@ -23,8 +23,8 @@ frontend_apps:
     frontend_repo: "git@github.com:maargali/fleet_owner_ui.git"
 
 
-    frontend_container_name: "prod-fleet-ui"
-    frontend_image_name: "prod-fleet-ui"
+    frontend_container_name: prod-fleet-ui
+    frontend_image_name: prod-fleet-ui
 
     frontend_host_port: 7081
 
@@ -38,8 +38,8 @@ frontend_apps:
     frontend_name: "anchor-ui"
 
     frontend_repo: "git@github.com:maargali/anchor-ui.git"
-    frontend_container_name: "prod-anchor-ui"
-    frontend_image_name: "prod-anchor-ui"
+    frontend_container_name: prod-anchor-ui
+    frontend_image_name: prod-anchor-ui
 
     frontend_host_port: 9081
     frontend_build_args:

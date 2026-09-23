@@ -38,7 +38,7 @@ nginx_vhosts:
 
     nginx_locations:
       - path: /
-        proxy_pass: http://anchor-ui-prod:80
+        proxy_pass: http://prod-anchor-ui:80
 
       - path: /api
-        proxy_pass: http://anchor-app-prod:9080
+        proxy_pass: http://prod-anchor-app:9080
