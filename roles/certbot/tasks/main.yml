@@ -4,9 +4,9 @@
     state: present
     update_cache: true
 
-- name: Stop nginx if running
+- name: Stop global-nginx if running
   service:
-    name: nginx
+    name: global-nginx
     state: stopped
   ignore_errors: true
 
@@ -25,8 +25,10 @@
 
   args:
     creates: "/etc/letsencrypt/live/{{ certbot_domains[0] }}/fullchain.pem"
-- name: Start nginx
-  service:
-    name: nginx
-    state: started
-    enabled: true
+
+  always:
+    - name: Start global-nginx
+      service:
+        name: global-nginx
+        state: started
+        enabled: true
