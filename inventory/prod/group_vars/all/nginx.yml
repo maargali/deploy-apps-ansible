@@ -23,7 +23,7 @@ nginx_vhosts:
       - fleet.fuelman.in
 
     primary_domain: fleet.fuelman.in
-    cert_name: fuelman.in
+    cert_name: fleet.fuelman.in
 
     nginx_locations:
       - path: /
@@ -35,10 +35,16 @@ nginx_vhosts:
       - anchor.fuelman.in
 
     primary_domain: anchor.fuelman.in
-
+    cert_name: anchor.fuelman.in
+    
     nginx_locations:
       - path: /
         proxy_pass: http://prod-anchor-ui:80
 
       - path: /api
         proxy_pass: http://prod-anchor-app:9080
+
+# nginx global port configuration
+nginx_http_port : '81'
+
+nginx_https_port : '8443'
