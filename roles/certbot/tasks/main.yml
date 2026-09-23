@@ -1,34 +1,34 @@
+---
 - name: Install certbot
-  apt:
+  ansible.builtin.apt:
     name: certbot
     state: present
     update_cache: true
 
-- name: Stop global-nginx if running
-  service:
-    name: global-nginx
-    state: stopped
-  ignore_errors: true
+- name: Generate or update SSL certificates
+  block:
 
-- name: Generate or Update SSL certificates
-  command: >
-    certbot certonly
-    --standalone
-    --non-interactive
-    --agree-tos
-    --expand
-    --cert-name {{ certbot_cert_name }}
-    --email {{ certbot_email }}
-    {% for domain in certbot_domains %}
-    -d {{ domain }}
-    {% endfor %}
+    - name: Stop global-nginx
+      community.docker.docker_container:
+        name: global-nginx
+        state: stopped
 
-  args:
-    creates: "/etc/letsencrypt/live/{{ certbot_domains[0] }}/fullchain.pem"
+    - name: Generate or update SSL certificates
+      ansible.builtin.command: >
+        certbot certonly
+        --standalone
+        --non-interactive
+        --agree-tos
+        --expand
+        --cert-name {{ certbot_cert_name }}
+        --email {{ certbot_email }}
+        {% for domain in certbot_domains %}
+        -d {{ domain }}
+        {% endfor %}
 
   always:
+
     - name: Start global-nginx
-      service:
+      community.docker.docker_container:
         name: global-nginx
         state: started
-        enabled: true
