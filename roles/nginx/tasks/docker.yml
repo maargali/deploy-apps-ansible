@@ -11,7 +11,9 @@
 
     ports:
       - "{{ nginx_http_port }}:80"
-      - "{{ nginx_https_port }}:443"
+      # disabled since ssl handshake happen at global level and then nginx will route to the correct vhost based on server_name
+      # enable if global nginx ssl termination is disabled
+      #- "{{ nginx_https_port }}:443"
 
     networks:
       - name: "{{ docker_network }}"
