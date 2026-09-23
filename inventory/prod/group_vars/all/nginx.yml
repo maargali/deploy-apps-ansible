@@ -7,8 +7,7 @@ nginx_vhosts:
       - www.fuelman.in
 
     primary_domain: fuelman.in
-    # indivial ssl disabled, since it is moved to global ssl termination at nginx level.. enable if global nginx ssl termination is disableds
-    # cert_name: fuelman.in
+    cert_name: fuelman.in
 
     nginx_locations:
       - path: /
@@ -24,8 +23,7 @@ nginx_vhosts:
       - fleet.fuelman.in
 
     primary_domain: fleet.fuelman.in
-    # indivial ssl disabled, since it is moved to global ssl termination at nginx level.., enable if global nginx ssl termination is disableds
-    # cert_name: fleet.fuelman.in
+    cert_name: fleet.fuelman.in
 
     nginx_locations:
       - path: /
@@ -37,9 +35,8 @@ nginx_vhosts:
       - anchor.fuelman.in
 
     primary_domain: anchor.fuelman.in
-    # indivial ssl disabled, since it is moved to global ssl termination at nginx level.., enable if global nginx ssl termination is disableds
-    #cert_name: anchor.fuelman.in
-
+    cert_name: anchor.fuelman.in
+    
     nginx_locations:
       - path: /
         proxy_pass: http://prod-anchor-ui:80
@@ -50,5 +47,4 @@ nginx_vhosts:
 # nginx global port configuration
 nginx_http_port : '81'
 
-# disabled since ssl handshake happen at global level and then nginx will route to the correct vhost based on server_name
-# nginx_https_port : '8443'
+nginx_https_port : '8443'
