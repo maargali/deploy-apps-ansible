@@ -1,3 +1,17 @@
+---
+- name: Select frontend application
+  ansible.builtin.set_fact:
+    app_config: "{{ frontend_apps[app_name] }}"
+
+- name: Load application variables
+  ansible.builtin.set_fact:
+    frontend_name: "{{ app_config.frontend_name }}"
+    frontend_repo: "{{ app_config.frontend_repo }}"
+    frontend_container_name: "{{ app_config.frontend_container_name }}"
+    frontend_image_name: "{{ app_config.frontend_image_name }}"
+    frontend_host_port: "{{ app_config.frontend_host_port }}"
+    frontend_build_args: "{{ app_config.frontend_build_args }}"
+
 - name: Set frontend app directory
   set_fact:
     frontend_app_dir: "{{ frontend_app_base_dir }}/{{ frontend_name }}"
