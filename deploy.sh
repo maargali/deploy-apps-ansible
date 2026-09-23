@@ -392,6 +392,8 @@ echo ""
 # ============================================================
 # 10. Execute Ansible
 # ============================================================
+echo "Executing Ansible playbook..."
+echo  ansible-playbook "${ANSIBLE_ARGS[@]}"
 
 ansible-playbook "${ANSIBLE_ARGS[@]}"
 
