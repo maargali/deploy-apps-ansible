@@ -11,7 +11,7 @@ nginx_vhosts:
 
     nginx_locations:
       - path: /
-        proxy_pass: http://fuelman-ui-prod:80
+        proxy_pass: http://prod-fuelman-ui:80
 
       - path: /api
         proxy_pass: http://fuelmanAppProd:8080
