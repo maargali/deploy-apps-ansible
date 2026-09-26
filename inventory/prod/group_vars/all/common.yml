@@ -7,6 +7,8 @@ timezone: Asia/Kolkata
 # same is used for docker network name
 env: prod
 
+git_branch : main
+
 # base directory for all apps
 app_base_dir: /opt/maargali/prod/apps
 

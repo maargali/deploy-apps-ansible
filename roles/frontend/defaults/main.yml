@@ -1,4 +1,4 @@
-frontend_branch: "main"
+frontend_branch: {{git_branch}}
 
 frontend_network: "{{docker_network}}"
 

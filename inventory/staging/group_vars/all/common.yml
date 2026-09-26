@@ -7,6 +7,9 @@ timezone: Asia/Kolkata
 # same is used for docker network name
 env: staging
 
+# pre_prod is used for staging environment
+git_branch : pre_prod
+
 # base directory for all apps
 app_base_dir: /opt/maargali/staging/apps
 

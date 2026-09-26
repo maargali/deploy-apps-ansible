@@ -1,4 +1,4 @@
-backend_branch: "main"
+backend_branch: {{git_branch}}
 
 backend_network: "{{docker_network}}"
 
