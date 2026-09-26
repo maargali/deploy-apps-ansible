@@ -27,7 +27,7 @@ nginx_vhosts:
 
     nginx_locations:
       - path: /
-        proxy_pass: http://fleet-ui-prod:80
+        proxy_pass: http://prod-fleet-ui:80
 
   - name: anchor
 
